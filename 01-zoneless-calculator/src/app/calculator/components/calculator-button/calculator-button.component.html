@@ -1,5 +1,7 @@
 <button
   [class.is-command]="isCommand()"
+  (click)="handleClick()"
+  #button
 >
   <ng-content />
 </button>

@@ -1,8 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   HostBinding,
   input,
+  output,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -19,6 +22,9 @@ import {
   // encapsulation: ViewEncapsulation.None,
 })
 export class CalculatorButtonComponent {
+  public onClick = output<string>();
+  public contentValue = viewChild<ElementRef<HTMLButtonElement>>('button');
+
   // Input decorator with a custom transform function
   // if the value is a string, it will be converted to a boolean
   public isCommand = input(false, {
@@ -39,5 +45,14 @@ export class CalculatorButtonComponent {
   // }
   @HostBinding('class.w-2/4') get commandStyle() {
     return this.isDoubleSize();
+  }
+
+  handleClick() {
+    if (!this.contentValue()?.nativeElement) {
+      return;
+    }
+
+    const value = this.contentValue()!.nativeElement.innerText;
+    this.onClick.emit(value);
   }
 }
