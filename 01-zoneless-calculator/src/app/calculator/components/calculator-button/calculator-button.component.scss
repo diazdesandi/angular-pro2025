@@ -19,3 +19,7 @@ button:hover {
 .is-command {
   @apply bg-indigo-700/20;
 }
+
+.is-pressed {
+  @apply bg-indigo-900;
+}

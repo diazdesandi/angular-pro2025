@@ -5,6 +5,7 @@ import {
   HostBinding,
   input,
   output,
+  signal,
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -16,12 +17,17 @@ import {
   templateUrl: './calculator-button.component.html',
   styleUrls: ['./calculator-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  // Overrding is going to create race conditions
   host: {
-    class: 'w-1/4 border-r border-b border-indigo-400',
+    class: 'border-r border-b border-indigo-400',
+    '[class.w-1/4]': '!isDoubleSize()',
+    '[class.w-2/4]': 'isDoubleSize()',
   },
   // encapsulation: ViewEncapsulation.None,
 })
 export class CalculatorButtonComponent {
+  public isPressed = signal(false);
+
   public onClick = output<string>();
   public contentValue = viewChild<ElementRef<HTMLButtonElement>>('button');
 
@@ -43,9 +49,10 @@ export class CalculatorButtonComponent {
   // @HostBinding('class.is-command') get commandStyle() {
   //   return this.isCommand();
   // }
-  @HostBinding('class.w-2/4') get commandStyle() {
-    return this.isDoubleSize();
-  }
+
+  // @HostBinding('class.w-2/4') get commandStyle() {
+  //   return this.isDoubleSize();
+  // }
 
   handleClick() {
     if (!this.contentValue()?.nativeElement) {
@@ -54,5 +61,19 @@ export class CalculatorButtonComponent {
 
     const value = this.contentValue()!.nativeElement.innerText;
     this.onClick.emit(value);
+  }
+
+  public keyboardPressedStyle(key: string) {
+    if (!this.contentValue()) return;
+
+    const value = this.contentValue()!.nativeElement.innerText;
+
+    if (value !== key) return;
+
+    this.isPressed.set(true);
+
+    setTimeout(() => {
+      this.isPressed.set(false);
+    }, 100);
   }
 }
