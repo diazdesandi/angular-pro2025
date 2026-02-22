@@ -1,0 +1,25 @@
+@import "../../../../styles.css";
+
+button {
+  @apply w-full h-16 outline-none text-white text-xl font-light;
+}
+
+button:focus {
+  outline: none;
+}
+
+button:hover {
+  @apply bg-indigo-700/50;
+}
+/*
+::ng-deep .is-command {
+  @apply bg-indigo-700 opacity-20;
+}
+*/
+.is-command {
+  @apply bg-indigo-700/20;
+}
+
+.is-pressed {
+  @apply bg-indigo-900;
+}
